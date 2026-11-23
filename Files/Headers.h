@@ -13,7 +13,7 @@
 #import "Headers/YTWatchLayerViewController.h"
 #import "Headers/YTInlineMutedPlaybackStateControllers.h"
 #import "Headers/YTInlineMutedPlaybackWatchController.h"
-#import "Headers/YTAudioTrackSwitchControllerImpl.h"
+#import "Headers/YTAudioTrackSwitchController+Impl.h"
 #import "Headers/YTIMenuConditionalServiceItemRenderer.h"
 #import "Headers/YTIPivotBarRenderer.h"
 #import "Headers/YTIPivotBarItemRenderer.h"

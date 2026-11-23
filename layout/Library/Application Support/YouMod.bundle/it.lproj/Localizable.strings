@@ -754,3 +754,9 @@
 "DEV_ROLE_AUTHOR" = "Author/Owner";
 "DEV_ROLE_COLLABORATOR" = "Collaborator";
 "DEV_HEADER" = "Developer";
+
+"HIDE_SHORTS_HISTORY" = "Nascondi Shorts nella cronologia";
+"HIDE_SHORTS_HISTORY_DESC" = "Rimuove anche lo scaffale degli Shorts dalla scheda Cronologia. Richiede \"Nascondi scaffale Shorts\".";
+"BLOCK_SHORTS_PLAYER" = "Blocca il player degli Shorts";
+"BLOCK_SHORTS_PLAYER_DESC" = "Chiude qualsiasi Short appena si apre, da un link, dalla cronologia, dalle notifiche o dalla ricerca.";
+"SHORTS_BLOCKED" = "Gli Shorts sono bloccati nelle impostazioni di YouMod";

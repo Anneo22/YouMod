@@ -64,7 +64,34 @@ static void YouModRemoveShortsOverlayButton(_ASDisplayView *dpView) {
     }   
 }
 
+
+// Block Shorts player: close any Short as soon as it opens (from links, history, notifications, search).
+static void YouModCloseShortsController(UIViewController *controller) {
+    if (!IS_ENABLED(BlockShortsPlayer) || !controller) return;
+    YTPlayerViewController *player = [controller respondsToSelector:@selector(player)] ? [controller performSelector:@selector(player)] : nil;
+    if ([player respondsToSelector:@selector(pause)]) [player performSelector:@selector(pause)];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        UINavigationController *nav = controller.navigationController;
+        if (nav && nav.viewControllers.count > 1) [nav popViewControllerAnimated:YES];
+        else if (controller.presentingViewController) [controller dismissViewControllerAnimated:YES completion:nil];
+        else {
+            UIViewController *root = YouModAppViewController();
+            if ([root respondsToSelector:@selector(pivotBarViewController)]) {
+                id pivot = [root performSelector:@selector(pivotBarViewController)];
+                if ([pivot respondsToSelector:@selector(selectItemWithPivotIdentifier:)]) [pivot performSelector:@selector(selectItemWithPivotIdentifier:) withObject:@"FEwhat_to_watch"];
+            }
+        }
+        Class hudClass = %c(YTHUDMessage), managerClass = %c(GOOHUDManagerInternal);
+        if ([hudClass respondsToSelector:@selector(messageWithText:)] && [managerClass respondsToSelector:@selector(sharedInstance)])
+            [[managerClass sharedInstance] showMessageMainThread:[hudClass messageWithText:LOC(@"SHORTS_BLOCKED")]];
+    });
+}
+
 %hook YTReelPlayerViewController
+- (void)viewDidAppear:(BOOL)animated {
+    %orig;
+    YouModCloseShortsController(self);
+}
 - (BOOL)shouldAlwaysEnablePlayerBar { return IS_ENABLED(ShowShortsSeekbar) ? YES : %orig; }
 - (BOOL)shouldEnablePlayerBarOnlyOnPause { return IS_ENABLED(ShowShortsSeekbar) ? NO : %orig; }
 - (void)loadPlayerBar {
@@ -84,6 +111,10 @@ static void YouModRemoveShortsOverlayButton(_ASDisplayView *dpView) {
 
 // YT 21.4x: Shorts are hosted by YTReelContainerViewController + YTShortsContentPresenter, not YTReelPlayerViewController
 %hook YTReelContainerViewController
+- (void)viewDidAppear:(BOOL)animated {
+    %orig;
+    YouModCloseShortsController(self);
+}
 - (void)handleLoopBehavior {
     NSInteger action = INTFORVAL(ShortsActionIndex);
     if (action == 1) [[self valueForKey:@"_delegate"] playbackSequentialItemControllerDidRequestNextReel:self isAutoAdvance:YES];

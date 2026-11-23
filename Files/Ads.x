@@ -91,6 +91,7 @@ static BOOL isAdRenderer(YTIElementRenderer *elementRenderer) {
 NSMutableArray <YTIItemSectionRenderer *> *filteredArray(NSArray <YTIItemSectionRenderer *> *array) {
     const BOOL hideShorts = IS_ENABLED(HideShortsShelf);
     const BOOL keepShortsSub = IS_ENABLED(KeepShortsSubscript);
+    const BOOL hideShortsHistory = IS_ENABLED(HideShortsHistory);
     const BOOL hideFeedPost = IS_ENABLED(HideFeedPost);
     const BOOL hidePlayables = IS_ENABLED(HidePlayables);
     const BOOL hideHoriShelf = IS_ENABLED(HideHoriShelf);
@@ -149,7 +150,7 @@ NSMutableArray <YTIItemSectionRenderer *> *filteredArray(NSArray <YTIItemSection
                 const BOOL isHistory = [description containsString:@"history-shorts-shelf-item"];
                 const BOOL isSubsShorts = [description containsString:@"subscriptions-shorts-shelf-item"];
                 if ([description containsString:@"video_lockup_overlay"]) return YES;
-                if (isShortsShelf && !isHistory && !(keepShortsSub && isSubsShorts)) return YES;
+                if (isShortsShelf && !(isHistory && !hideShortsHistory) && !(keepShortsSub && isSubsShorts)) return YES;
             }
 
             if ((hidePlayables || hideHoriShelf) && [description containsString:@"horizontal_shelf.eml"]) {
